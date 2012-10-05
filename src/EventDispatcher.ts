@@ -1,5 +1,5 @@
 /**
- * EventDispatcher.js
+ * EventDispatcher (TypeScript)
  * - Simple extendable event dispatching class
  *
  * @version 0.1
@@ -10,7 +10,7 @@ export class Event {
 	private _type:string;
 	private _target;
 
-	constructor(type:string, targetObj) {
+	constructor(type:string, targetObj:Object) {
 		this._type = type;
 		this._target = targetObj;
 	}
