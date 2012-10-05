@@ -10,12 +10,12 @@ export class Event {
 	private _type:string;
 	private _target;
 
-	constructor(type:string, targetObj:Object) {
+	constructor(type:string, targetObj:any) {
 		this._type = type;
 		this._target = targetObj;
 	}
 	
-	getTarget() {
+	getTarget():any {
 		return this._target;
 	}
 
@@ -30,7 +30,7 @@ export class EventDispatcher {
 		this._listeners = [];
 	}
 
-	hasEventListener(type:string, listener) {
+	hasEventListener(type:string, listener):Boolean {
 		var exists = false;
 		for (var i = 0; i < this._listeners.length; i++) {
 			if (this._listeners[i].type === type && this._listeners[i].listener === listener) {
