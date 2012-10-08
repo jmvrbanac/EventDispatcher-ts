@@ -57,10 +57,10 @@ export class EventDispatcher {
 		}
 	}
 
-	dispatchEvent (event) {
+	dispatchEvent (evt) {
 		for (var i = 0; i < this._listeners.length; i++) {
-			if (this._listeners[i].type === event.getType()) {
-				this._listeners[i].listener.call(event);
+			if (this._listeners[i].type === evt.getType()) {
+				this._listeners[i].listener.call(this, evt);
 			}
 		}
 	}
