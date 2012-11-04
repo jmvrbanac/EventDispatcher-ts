@@ -4,7 +4,7 @@
  *
  * @version 0.1
  * @author John Vrbanac
- * @license GNU AGPLv3
+ * @license MIT License
  **/
 export class Event {
 	private _type:string;
