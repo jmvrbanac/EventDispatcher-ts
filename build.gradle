@@ -1,0 +1,57 @@
+defaultTasks "minify"
+
+// Change this to name of your starting script file in the src dir.
+def mainModule = "EventDispatcher"
+
+task removeTarget(type:Delete) {
+	delete "build/"
+}
+
+task createTarget(type:Exec, dependsOn:"removeTarget") {
+	commandLine "mkdir", "build"
+}
+
+task clean(dependsOn:"createTarget") {
+	FileTree tree = fileTree('src').include('**/*.js')
+	tree.each { File file -> delete file }
+}
+
+task build(type: Exec, dependsOn:"clean") {
+	def tsc = "tsc"
+	workingDir "src/"
+
+	if (System.properties['os.name'].toLowerCase().contains('mac')) {
+		tsc = "/usr/local/bin/tsc"
+	}
+
+	commandLine tsc, "--module", "amd", mainModule + ".ts", "--target", "ES3", "-c", "--declarations"
+}
+
+task composite(type: Exec, dependsOn:["build", "moveDeclarations", "jasmine"]) {
+	workingDir "./"
+	commandLine "node", "tools/r.js", "-o", "name=" + mainModule, "out=build/" + mainModule + ".js", "baseUrl=src/", "optimize=none"
+}
+
+task minify(type: Exec, dependsOn:["composite"]) {
+	workingDir "./"
+	commandLine "node", "tools/r.js", "-o", "name=" + mainModule, "out=build/" + mainModule + ".min.js", "baseUrl=src/"
+}
+
+// There is probably a better way to do it in gradle, but this will work for now.
+task moveDeclarations(type:Exec, dependsOn:["build"]) {
+	workingDir "./"
+	commandLine "mv","src/" + mainModule + ".d.ts", "build/"
+}
+
+task prepForJUnit () {
+	doLast {
+		File outputDir = file("./build/junit")
+		outputDir.mkdirs()
+	}
+}
+
+task jasmine(type: Exec, dependsOn:["prepForJUnit", "build"], description: "Runs Jasmine through PhantomJS"){
+	def phantomjs = "phantomjs"
+
+	commandLine = [phantomjs, "./tools/phantomjs/phantomjs-testrunner.js", file("index.html").absolutePath]
+}

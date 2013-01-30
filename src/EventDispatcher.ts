@@ -2,7 +2,7 @@
  * EventDispatcher (TypeScript)
  * - Simple extendable event dispatching class
  *
- * @version 0.1
+ * @version 0.1.5
  * @author John Vrbanac
  * @license MIT License
  **/
