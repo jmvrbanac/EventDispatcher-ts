@@ -8,30 +8,30 @@
  **/
 export class Event {
 	private _type:string;
-	private _target;
+	private _target:any;
 
 	constructor(type:string, targetObj:any) {
 		this._type = type;
 		this._target = targetObj;
 	}
 	
-	getTarget():any {
+	public getTarget():any {
 		return this._target;
 	}
 
-	getType():string {
+	public getType():string {
 		return this._type;
 	}
 }
 
 export class EventDispatcher {
-	private _listeners;
+	private _listeners:any[];
 	constructor() {
 		this._listeners = [];
 	}
 
-	hasEventListener(type:string, listener):Boolean {
-		var exists = false;
+	public hasEventListener(type:string, listener:Function):Boolean {
+		var exists:Boolean = false;
 		for (var i = 0; i < this._listeners.length; i++) {
 			if (this._listeners[i].type === type && this._listeners[i].listener === listener) {
 				exists = true;
@@ -41,7 +41,7 @@ export class EventDispatcher {
 		return exists;
 	}
 
-	addEventListener (typeStr, listenerFunc) {
+	public addEventListener (typeStr:string, listenerFunc:Function):void {
 		if (this.hasEventListener(typeStr, listenerFunc)) {
 			return;
 		}
@@ -49,7 +49,7 @@ export class EventDispatcher {
 		this._listeners.push({type: typeStr, listener: listenerFunc});
 	}
 
-	removeEventListener (typeStr, listenerFunc) {
+	public removeEventListener (typeStr:string, listenerFunc:Function):void {
 		for (var i = 0; i < this._listeners.length; i++) {
 			if (this._listeners[i].type === typeStr && this._listeners[i].listener === listenerFunc) {
 				this._listeners.splice(i, 1);
@@ -57,7 +57,7 @@ export class EventDispatcher {
 		}
 	}
 
-	dispatchEvent (evt) {
+	public dispatchEvent (evt:Event) {
 		for (var i = 0; i < this._listeners.length; i++) {
 			if (this._listeners[i].type === evt.getType()) {
 				this._listeners[i].listener.call(this, evt);
